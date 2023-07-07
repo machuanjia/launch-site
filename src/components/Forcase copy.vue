@@ -8,10 +8,7 @@
       </div>
       <div class="time">{{ currentDate() }} (北京)</div>
       <section class="card" v-for="(item, key) in datas" :key="key">
-        <header class="card-header">
-          <div class="card-header-title">{{ item.lable }}{{ key }}</div>
-          <div class="card-header-desc"></div>
-        </header>
+        <header class="card-header"><div class="card-header-title">{{ item.lable }}</div> <div class="card-header-desc"></div></header>
         <div class="card-body">
           <div class="row row-header">
             <div class="row-name">地面站</div>
@@ -36,8 +33,6 @@
             <div class="row-duration">{{ task.duration }}</div>
             <div class="row-process row-process-col">
               <el-progress
-                :key="`${index}-process`"
-                :style="{ width: task.durationPercent, marginLeft: task.offset }"
                 :text-inside="true"
                 :show-text="task.process !== 0"
                 :stroke-width="18"
@@ -46,7 +41,7 @@
                 :striped="task.process < 100"
                 :striped-flow="task.process < 100"
               />
-              <div v-if="task.processText" class="row-process-text" :style="{left:task.offset}">
+              <div v-if="task.processText" class="row-process-text">
                 距开始: {{ task.processText }}
               </div>
             </div>
@@ -55,26 +50,16 @@
             <div class="row-description">{{ task.description }}</div>
           </div>
         </div>
-        <!-- <footer class="card-footer"></footer> -->
+        <footer class="card-footer">h</footer>
       </section>
-
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <div class="slogen2">Make The Earth Better</div>
-      <div class="slogen2">让地球更美好</div>
     </div>
   </section>
 </template>
 
 <script>
-import { map, sortBy } from 'lodash'
+import { map, maxBy } from 'lodash'
 export default {
   props: {
-    size:{
-      default: 5
-    },
     value: {
       required: true,
       default: {
@@ -95,7 +80,6 @@ export default {
   },
   data() {
     return {
-      spliceLength:5,
       datas: {
         noah: {
           lable: 'Noah',
@@ -113,7 +97,6 @@ export default {
     }
   },
   created() {
-    this.spliceLength = this.size
     this.formatData(this.value)
   },
   mounted() {
@@ -124,9 +107,6 @@ export default {
   watch: {
     value(news, olds) {
       news && this.formatData(news)
-    },
-    size(news, olds) {
-     this.spliceLength = news
     }
   },
   methods: {
@@ -135,29 +115,24 @@ export default {
     },
     formatData(news) {
       const temp = {}
-      map(news, ({ label, list }, k) => {
-        let ls = list.filter((n)=>{
-          return this.$moment(n.end) > this.$moment()
-        })
-        ls = sortBy(ls, (n) => {
-          return this.$moment(n.start).valueOf()
-        }).splice(0,this.spliceLength)
+      map(news, ({ lable, list }, k) => {
         let min = null
         let max = null
-        ls.forEach((n) => {
+        list.forEach((n) => {
           const st = this.$moment(n.start)
-          if (!min) {
+          if(!min){
             min = st.valueOf()
-          } else {
+          }else{
             min = Math.min(st.valueOf(), min)
           }
-
+          
           const en = this.$moment(n.end)
-          if (!min) {
+          if(!min){
             max = en.valueOf()
-          } else {
+          }else{
             max = Math.max(en.valueOf(), max)
           }
+          
 
           const current = this.$moment()
           n.startText = st.format('HH:mm:ss')
@@ -191,20 +166,11 @@ export default {
           n.left = left
           n.beforeLeft = beforeLeft
         })
-        const allDuration = this.$moment(max).diff(this.$moment(min), 'seconds')
-        ls.forEach((n) => {
-          n.durationPercent = parseInt((n.duration / allDuration) * 100) + '%'
-          n.offset =
-            parseInt(
-              (this.$moment(n.start).diff(this.$moment(min), 'seconds') / allDuration) * 100
-            ) + '%'
-          n.allDuration = allDuration
-          n.st = this.$moment(n.start).valueOf()
-          n.min = min
-        })
+        console.log(min,max)
+        // const  allDuration = en.diff(st, 'seconds')
         temp[k] = {
-          lable:label,
-          list: ls
+          lable,
+          list
         }
       })
       this.datas = temp
@@ -219,15 +185,13 @@ export default {
   background-size: 100% 150%;
 }
 .mask {
-  min-height: 100vh;
+  height: 100vh;
   width: 100wh;
   background: rgba(0, 0, 0, 0.6);
-  padding-bottom: 100px;
 }
 
 .header {
   padding-top: 30px;
-  padding-bottom: 50px;
 }
 .logo {
   display: flex;
@@ -239,7 +203,7 @@ export default {
 }
 
 .card {
-  /* margin: 20px; */
+  margin: 20px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   box-shadow: 0 0 2px #000000;
@@ -257,21 +221,20 @@ export default {
   align-items: center;
 }
 .card-header-title {
-  flex: 1;
-  font-weight: bold;
+  flex:1;
 }
-.card-header-desc {
+.card-header-desc{
+
 }
-.time {
-  position: fixed;
-  top: 8px;
+.time{
+  position: absolute;
+  top:20px;
   right: 20px;
   font-size: 14px;
   padding-right: 10px;
   font-size: 40px;
   color: #fff;
   text-shadow: 0 0 2px #000000;
-  font-weight: bold;
 }
 .card-body {
   /* background: #f00; */
@@ -289,7 +252,6 @@ export default {
   padding: 10px 4px;
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 18px;
 }
 
 .row-running {
@@ -351,41 +313,38 @@ export default {
 .row-header {
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 12px;
 }
 
 .row-name {
-  width: 200px;
+  width: 280px;
 }
 .row-start {
-  width: 120px;
- 
+  width: 200px;
 }
 .row-end {
-  width: 120px;
+  width: 200px;
 }
 .row-duration {
-  width: 80px;
-  padding-right: 4px;
+  width: 120px;
 }
 .row-left {
   width: 80px;
-  padding-left: 10px;
 }
 .row-elevation {
-  width: 120px;
+  width: 200px;
   padding-left: 10px;
 }
 .row-description {
-  width: 180px;
+  width: 280px;
   padding-left: 10px;
-  font-size:12px;
 }
 .row-process {
   flex: 1;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .row-process-col {
   padding-top: 4px;
@@ -397,15 +356,5 @@ export default {
   font-size: 12px;
   color: #12197e;
   font-weight: bold;
-  transform: translateX(8px);
 }
-
-
-.slogen2{
-  text-align: center;
-  font-size: 16px;
-  font-family: 'Microsoft YaHei';
-  color: #fff;
-  margin-bottom: 20px;
-  }
 </style>

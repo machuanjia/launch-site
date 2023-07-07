@@ -1,7 +1,7 @@
 <template>
   <div v-if="current == 1" class="main"><LanchDown :time="time"/></div>
   <div v-if="current == 2" class="main"><SeparateDown :time="separate"/></div>
-  <div v-if="current == 3" class="main"><Forcase :value="datas"/></div>
+  <div v-if="current == 3" class="main"><Forcase :size="size" :value="datas"/></div>
   <div v-if="current == 4" class="main"><Success /></div>
 </template>
   <script>
@@ -17,6 +17,7 @@ export default {
       current: 1,
       time: 1 * 24 * 60 * 60 * 1000,
       separate:807*1000,
+      size:5,
       datas:{
         noah:{
           lable: 'Noah',
@@ -36,7 +37,7 @@ export default {
   created(){
     const settings = localStorage.getItem("settings")
     if(settings){
-      const { current = 1, datas = null,time,separate = 807000} = JSON.parse(settings)
+      const { current = 1, datas = null,time,separate = 807000,size=5} = JSON.parse(settings)
       this.current = current
       if(datas){
         this.datas = datas
@@ -45,6 +46,7 @@ export default {
         this.time = time  
       }
       this.separate = separate
+      this.size = size
     }
   },
   mounted() {
@@ -59,6 +61,7 @@ export default {
           this.time = obj.time
         }
         this.separate = obj.separate
+        this.size = obj.size || 5
       }
     }
   }

@@ -14,6 +14,9 @@
     <el-input-number v-model="separate" :min="1"  @change="handleChange" />
     <br/>
     <br/>
+    <el-input-number v-model="size" :min="1"  @change="handleSizeChange" />
+    <br/>
+    <br/>
     <el-input
       v-model="forcast"
       :rows="20"
@@ -31,6 +34,7 @@ export default {
       current: 1,
       t0: this.$moment().add(2,'hours'),
       separate: 807 * 1000,
+      size:5,
       forcast: ''
     }
   },
@@ -50,6 +54,7 @@ export default {
       const temp = {
         current: this.current,
         separate:this.separate,
+        size:this.size
       }
       if (this.forcast) {
         temp['datas'] = JSON.parse(this.forcast)
@@ -59,6 +64,9 @@ export default {
       localStorage.setItem('settings', JSON.stringify(temp))
     },
     handleT0(){
+      this.setLocal()
+    },
+    handleSizeChange(){
       this.setLocal()
     },
     handleChange(){

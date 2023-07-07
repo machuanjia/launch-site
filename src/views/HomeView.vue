@@ -1,6 +1,6 @@
 <template>
-  <div v-if="current == 1" class="main"><LanchDown /></div>
-  <div v-if="current == 2" class="main"><SeparateDown /></div>
+  <div v-if="current == 1" class="main"><LanchDown :time="time"/></div>
+  <div v-if="current == 2" class="main"><SeparateDown :time="separate"/></div>
   <div v-if="current == 3" class="main"><Forcase :value="datas"/></div>
   <div v-if="current == 4" class="main"><Success /></div>
 </template>
@@ -15,114 +15,52 @@ export default {
   data() {
     return {
       current: 1,
+      time: 1 * 24 * 60 * 60 * 1000,
+      separate:807*1000,
       datas:{
-        noah: {
+        noah:{
           lable: 'Noah',
-          list: [
-            {
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 09:42:22',
-              end: '2023-07-07 09:48:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 09:41:00',
-              end: '2023-07-07 09:49:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 09:49:00',
-              end: '2023-07-07 09:55:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 09:50:00',
-              end: '2023-07-07 09:59:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 09:56:00',
-              end: '2023-07-07 09:59:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 10:50:00',
-              end: '2023-07-07 10:59:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 10:50:00',
-              end: '2023-07-07 10:59:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            },{
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-07 10:50:00',
-              end: '2023-07-07 10:59:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            }
-          ]
+          list: []
         },
-        as2: {
+        as2:{
           lable: 'As-2',
-          list: [
-            {
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-06 19:39:22',
-              end: '2023-07-06 19:47:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            }
-          ]
+          list: []
         },
-        as3: {
+        as3:{
           lable: 'As-3',
-          list: [
-            {
-              antenna: '阿塞拜疆-SX-4501-驭星',
-              start: '2023-07-06 19:39:22',
-              end: '2023-07-06 19:47:19',
-              duration: '300',
-              maxElevationAngle: '88.934',
-              description: '备注',
-            }
-          ]
-        }
+          list: []
+        },
       }
     }
   },
   created(){
     const settings = localStorage.getItem("settings")
     if(settings){
-      const { current = 1 } = JSON.parse(settings)
+      const { current = 1, datas = null,time,separate = 807000} = JSON.parse(settings)
       this.current = current
+      if(datas){
+        this.datas = datas
+      }
+      if(time){
+        this.time = time  
+      }
+      this.separate = separate
     }
   },
   mounted() {
     window.onstorage = (e) => {
       if (e.key === 'settings' && e.newValue) {
-        console.log(e.newValue)
         const obj = JSON.parse(e.newValue)
         this.current = obj.current
+        if(obj.datas){
+          this.datas = obj.datas
+        }
+        if(obj.time){
+          this.time = obj.time
+        }
+        this.separate = obj.separate
       }
     }
-    console.log(this.$refs.items)
   }
 }
 </script>

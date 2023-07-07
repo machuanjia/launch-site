@@ -2,7 +2,7 @@
   <div class="wrap">
     <!-- <iframe src="https://assets.pinterest.com/ext/embed.html?id=985231161845334" height="2000" width="2000" frameborder="0" scrolling="no" ></iframe> -->
     <div class="mask">
-      <vue-countdown :time="10 * 24 * 60 * 60 * 1000" v-slot="{ days, hours, minutes, seconds }">
+      <vue-countdown :time="time" v-slot="{ days, hours, minutes, seconds }">
         <div class="container">
           <div class="main">
             <div class="header">
@@ -41,6 +41,13 @@
 import VueCountdown from '@chenfengyuan/vue-countdown'
 export default {
   components: { VueCountdown },
+  props:{
+    time:{
+      type: Number,
+      readonly: true,
+      default: 807 * 1000
+    }
+  },
   data() {
     return {
       styleObj: {

@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="mask">
-      <vue-countdown :time="10 * 24 * 60 * 60 * 1000" v-slot="{ days, hours, minutes, seconds }">
+      <vue-countdown :time="time" v-slot="{ days, hours, minutes, seconds }">
         <div class="container">
           <div class="main">
             <div class="header">
@@ -40,9 +40,14 @@
 import VueCountdown from '@chenfengyuan/vue-countdown'
 export default {
   components: { VueCountdown },
-  data() {
-    return {
+  props:{
+    time:{
+      type: Number,
+      readonly: true,
+      default: 1 * 24 * 60 * 60 * 1000
     }
+  },
+  data() {
   },
   methods: {
     currentDate() {

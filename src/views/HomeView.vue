@@ -37,16 +37,18 @@ export default {
   created(){
     const settings = localStorage.getItem("settings")
     if(settings){
-      const { current = 1, datas = null,time,separate = 807000,size=5} = JSON.parse(settings)
+      const { current = 1, datas = null,size=5, t0,t1} = JSON.parse(settings)
       this.current = current
       if(datas){
         this.datas = datas
       }
-      if(time){
-        this.time = time  
-      }
-      this.separate = separate
       this.size = size
+      if(t0){
+        this.time = this.$moment(t0).diff(this.$moment(),'milliseconds')
+      }
+      if(t1){
+        this.separate = this.$moment(t1).diff(this.$moment(),'milliseconds')
+      }
     }
   },
   mounted() {
@@ -57,10 +59,12 @@ export default {
         if(obj.datas){
           this.datas = obj.datas
         }
-        if(obj.time){
-          this.time = obj.time
+        if(obj.t0){
+          this.time = this.$moment(obj.t0).diff(this.$moment(),'milliseconds')
         }
-        this.separate = obj.separate
+        if(obj.t1){
+          this.separate = this.$moment(obj.t1).diff(this.$moment(),'milliseconds')
+        }
         this.size = obj.size || 5
       }
     }

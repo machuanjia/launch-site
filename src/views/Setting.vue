@@ -41,11 +41,12 @@ export default {
   created() {
     const settings = localStorage.getItem('settings')
     if (settings) {
-      const { current = 1, datas = null } = JSON.parse(settings)
+      const { current = 1, datas = null,t0 = this.$moment().add(2,'hours') } = JSON.parse(settings)
       this.current = current
       if (datas) {
         this.forcast = JSON.stringify(datas)
       }
+      this.t0 = t0
     }
   },
   mounted() {},
@@ -59,8 +60,8 @@ export default {
       if (this.forcast) {
         temp['datas'] = JSON.parse(this.forcast)
       }
-      const du = this.$moment(this.t0).diff(this.$moment(),'seconds')
-      temp['time'] = du * 1000
+      temp['t0'] = this.$moment(this.t0).valueOf()
+      temp['t1'] = this.$moment(this.t0).add(this.separate,'milliseconds').valueOf()
       localStorage.setItem('settings', JSON.stringify(temp))
     },
     handleT0(){

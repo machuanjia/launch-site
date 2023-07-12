@@ -2,11 +2,12 @@
   <section class="wrap">
     <div class="mask">
       <div class="header">
-        <div class="logo">
-          <img class="logo" src="@/assets/logo.pic.png" width="100" /> <span>银河航天</span>
-        </div>
+          <div class="logo-wrap">
+            <img class="logo" src="@/assets/logo.pic.png" width="60" /> <span>银河航天</span>
+          </div>
+          <div class="time">{{ currentDate() }} (北京)</div>
       </div>
-      <div class="time">{{ currentDate() }} (北京)</div>
+      <br/><br/><br/><br/>
       <section class="card" v-for="(item, key) in datas" :key="key">
         <header class="card-header">
           <div class="card-header-title">{{ item.lable }}{{ key }}</div>
@@ -254,40 +255,49 @@ export default {
 .mask {
   min-height: 100vh;
   width: 100wh;
-  background: rgba(0, 0, 0, 0.6);
+  background: #161719;
   padding-bottom: 100px;
 }
 
 .header {
   padding-top: 30px;
   padding-bottom: 50px;
-}
-.logo {
+  position: fixed;
+  left: 0;
+  right:0;
   display: flex;
-  justify-content: center;
+  color: #d8d9da;
+  padding: 10px;
+  background: #161719;
+  z-index: 10;
+}
+.logo-wrap{
+  flex: 1;
+  display: flex;
   align-items: center;
-  font-size: 60px;
-  color: #fff;
-  text-shadow: 0 0 5px #9898eb;
+  font-size: 40px;
 }
 
 .card {
-  /* margin: 20px; */
-  background: rgba(0, 0, 0, 0.5);
+  margin: 10px;
+  background: #212124;
   border-radius: 5px;
-  box-shadow: 0 0 2px #000000;
+  border:1px solid #141414;
 }
 
 .card-header {
   /* background: #f00; */
-  color: #fff;
+  color: #d8d9da;
   padding: 4px;
   padding-left: 10px;
   font-weight: bold;
-  text-shadow: 0 0 2px #000000;
+  /* text-shadow: 0 0 2px #000000; */
   font-size: 20px;
   display: flex;
   align-items: center;
+  /* border:1px solid #161719; */
+
+  text-align: center;
 }
 .card-header-title {
   flex: 1;
@@ -296,22 +306,13 @@ export default {
 .card-header-desc {
 }
 .time {
-  position: fixed;
-  top: 8px;
-  right: 20px;
   font-size: 40px;
-  color: #fff;
-  text-shadow: 0 0 2px #000000;
-  font-weight: bold;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 10px;
-  z-index: 10;
-  border-radius: 5px;
+  color: #d8d9da;
 }
 .card-body {
   /* background: #f00; */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin: 0 10px;
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+  /* margin: 0 10px; */
 }
 
 .card-footer {
@@ -320,16 +321,32 @@ export default {
 
 .row {
   display: flex;
-  color: #fff;
-  padding: 10px 4px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #d8d9da;
+  /* padding: 10px 4px; */
+  /* background: rgba(0, 0, 0, 0.8); */
   font-size: 24px;
+  /* margin-bottom: 4px; */
+}
+
+
+.row .row-name,
+.row .row-start,
+.row .row-end,
+.row .row-duration,
+.row .row-elevation,
+.row .row-description,
+.row .row-left,
+.row .row-process {
+  /* font-size: 18px; */
+  border: 2px solid #161719;
+  padding: 10px 4px;
+  border-right: 0;
 }
 
 .row-running {
   background: rgba(136, 244, 109, 0.7);
   box-shadow: 0 0 2px #000000;
+  
 }
 
 .row-running .row-name,
@@ -384,13 +401,14 @@ export default {
 }
 
 .row-header {
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg,#2f2f32,#262628);
+  border-top:1px solid #161719;
+  border-bottom:1px solid #161719;
   font-size: 16px;
 }
 
 .row-name {
-  width: 260px;
+  width: 270px;
 }
 .row-start {
   width: 120px;
@@ -425,15 +443,15 @@ export default {
   position: relative;
 }
 .row-process-col {
-  padding-top: 7px;
+  padding-top: 17px !important;
 }
 .row-process-text {
   position: absolute;
-  top: 6px;
-  left: 14px;
-  font-size: 16px;
-  color: #12197e;
-  font-weight: bold;
+  top: 18px;
+  left: 16px;
+  font-size: 14px;
+  color: #212124;
+  /* font-weight: bold; */
   transform: translateX(8px);
 }
 

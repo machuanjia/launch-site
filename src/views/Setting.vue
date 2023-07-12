@@ -20,6 +20,9 @@
     过站预报距离当前时间多少秒不在显示: <el-input-number v-model="ignore" :min="1"  @change="handleShowDurationChange" />
     <br/>
     <br/>
+    主根: <el-switch v-model="isMain" @change="handleMain"/>{{ isMain }}
+    <br/>
+    <br/>
     <el-input
       v-model="forcast"
       :rows="20"
@@ -39,7 +42,8 @@ export default {
       separate: 807 * 1000,
       size:5,
       ignore: 10 * 60 * 1000,
-      forcast: ''
+      forcast: '',
+      isMain:false
     }
   },
   created() {
@@ -60,7 +64,8 @@ export default {
         current: this.current,
         separate:this.separate,
         ignore:this.ignore,
-        size:this.size
+        size:this.size,
+        isMain:this.isMain
       }
       if (this.forcast) {
         temp['datas'] = JSON.parse(this.forcast)
@@ -85,6 +90,9 @@ export default {
       this.setLocal()
     },
     handleShowDurationChange(){
+      this.setLocal()
+    },
+    handleMain(){
       this.setLocal()
     }
   }

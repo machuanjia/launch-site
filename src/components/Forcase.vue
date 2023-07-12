@@ -75,6 +75,9 @@ export default {
     size:{
       default: 5
     },
+    isMain:{
+      default: false
+    },
     value: {
       required: true,
       default: {
@@ -169,7 +172,11 @@ export default {
       const temp = {}
       map(news, ({ label, list }, k) => {
         let ls = list.filter((n)=>{
-          return this.$moment(n.end).add(this.ignore,'milliseconds') > this.$moment()
+          let flag = this.$moment(n.end).add(this.ignore,'milliseconds') > this.$moment()
+          if(this.isMain && n.is_main === 0){
+            flag = false
+          }
+          return flag
         })
         ls = sortBy(ls, (n) => {
           return this.$moment(n.start).valueOf()

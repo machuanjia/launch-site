@@ -1,7 +1,7 @@
 <template>
   <div v-if="current == 1" class="main"><LanchDown :time="time"/></div>
   <div v-if="current == 2" class="main"><SeparateDown :time="separate"/></div>
-  <div v-if="current == 3" class="main"><Forcase :size="size" :value="datas"/></div>
+  <div v-if="current == 3" class="main"><Forcase :size="size" :value="datas" :ignore="ignore"/></div>
   <div v-if="current == 4" class="main"><Success /></div>
 </template>
   <script>
@@ -17,6 +17,7 @@ export default {
       current: 1,
       time: 1 * 24 * 60 * 60 * 1000,
       separate:807*1000,
+      ignore:10 * 60 * 1000,
       size:5,
       datas:{
         noah:{
@@ -37,7 +38,7 @@ export default {
   created(){
     const settings = localStorage.getItem("settings")
     if(settings){
-      const { current = 1, datas = null,size=5, t0,t1} = JSON.parse(settings)
+      const { current = 1, datas = null,size=5, t0,t1,ignore = 10 * 60 * 1000} = JSON.parse(settings)
       this.current = current
       if(datas){
         this.datas = datas
@@ -49,6 +50,7 @@ export default {
       if(t1){
         this.separate = this.$moment(t1).diff(this.$moment(),'milliseconds')
       }
+      this.ignore = ignore
     }
   },
   mounted() {
@@ -66,6 +68,7 @@ export default {
           this.separate = this.$moment(obj.t1).diff(this.$moment(),'milliseconds')
         }
         this.size = obj.size || 5
+        this.ignore = obj.ignore || 10 * 60 * 1000
       }
     }
   }

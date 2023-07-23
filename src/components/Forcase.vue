@@ -17,40 +17,40 @@
             <div class="row-name">地面站</div>
             <div class="row-start">进站时间</div>
             <div class="row-end">出站时间</div>
-            <div class="row-duration">时长(s)</div>
             <div class="row-process">进度</div>
-            <div class="row-left">剩余(s)</div>
+            <div class="row-left">剩(s)</div>
             <div class="row-elevation">最高仰角</div>
             <div class="row-description">备注</div>
           </div>
           <div
             :class="`row ${task.process !== 0 && task.process !== 100 && 'row-running'} ${
               task.process === 100 && 'row-done'
-            } ${task.beforeLeft > 0 && task.beforeLeft < 120 && 'row-warning'}`"
+            } ${task.beforeLeft > 0 && task.beforeLeft < 120 && 'row-warning'}  row-orbit-${task.orbitNo}`
+            "
             v-for="(task, index) in item.list"
             :key="index"
           >
             <div class="row-name">{{ task.antenna }}</div>
             <div class="row-start">{{ task.startText }}</div>
             <div class="row-end">{{ task.endText }}</div>
-            <div class="row-duration">{{ task.duration }}</div>
             <div class="row-process row-process-col">
               <el-progress
                 :key="`${index}-process`"
+                class="process"
                 :style="{ width: task.durationPercent, marginLeft: task.offset }"
                 :text-inside="true"
                 :show-text="task.process !== 0"
-                :stroke-width="18"
+                :stroke-width="24"
                 :percentage="task.process"
-                :status="task.process !== 100 ? 'success' : ''"
+                :status="task.process !== 100 ? '' : ''"
                 :striped="task.process < 100"
                 :striped-flow="task.process < 100"
               />
               <div v-if="task.processText" class="row-process-text" :style="{left:task.offset}">
-                距开始: {{ task.processText }}
+                距开始:{{ task.processText }}
               </div>
             </div>
-            <div class="row-left">{{ task.left }}</div>
+            <div class="row-left">{{ task.process !== 0 ? task.left : task.duration }}</div>
             <div class="row-elevation">{{ task.maxElevationAngle }}</div>
             <div class="row-description">{{ task.description }}</div>
           </div>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { map, sortBy } from 'lodash'
+import { groupBy, map, sortBy } from 'lodash'
 export default {
   props: {
     size:{
@@ -91,6 +91,9 @@ export default {
           list: []
         }
       }
+    },
+    ignore:{
+      default: 10 * 60 * 1000
     }
   },
   data() {
@@ -133,42 +136,58 @@ export default {
     currentDate() {
       return this.$moment().format('YYYY-MM-DD HH:mm:ss')
     },
+    getMax(list){
+      const groups = groupBy(list,'orbitNo')
+      const maxMap = {}
+      map(groups,(list,orbitNo)=>{
+        let min = null
+        let max = null
+        list.forEach((n) => {
+          const st = this.$moment(n.start)
+          const en = this.$moment(n.end)
+          if(en > this.$moment()){
+            if (!min) {
+              min = st.valueOf()
+            } else {
+              min = Math.min(st.valueOf(), min)
+            }
+            if (!min) {
+              max = en.valueOf()
+            } else {
+              max = Math.max(en.valueOf(), max)
+            }
+          }
+        })
+        maxMap[orbitNo] = {
+          min,
+          max
+        }
+      })
+      return maxMap
+    },
     formatData(news) {
       const temp = {}
       map(news, ({ label, list }, k) => {
         let ls = list.filter((n)=>{
-          return this.$moment(n.end) > this.$moment()
+          return this.$moment(n.end).add(this.ignore,'milliseconds') > this.$moment()
         })
         ls = sortBy(ls, (n) => {
           return this.$moment(n.start).valueOf()
         }).splice(0,this.spliceLength)
-        let min = null
-        let max = null
+        const maxMap = this.getMax(ls)
         ls.forEach((n) => {
           const st = this.$moment(n.start)
-          if (!min) {
-            min = st.valueOf()
-          } else {
-            min = Math.min(st.valueOf(), min)
-          }
-
           const en = this.$moment(n.end)
-          if (!min) {
-            max = en.valueOf()
-          } else {
-            max = Math.max(en.valueOf(), max)
-          }
-
           const current = this.$moment()
           n.startText = st.format('HH:mm:ss')
           n.endText = en.format('HH:mm:ss')
           n.duration = en.diff(st, 'seconds')
           let process = 0
           let processText = ''
-          let left = '-'
+          let left = 0
           let beforeLeft = 0
-          // 结束时间小于当前时间，已经结束
           if (en < current) {
+            // 结束时间小于当前时间，已经结束
             process = 100
           }
           // 开始时间大于当前时间，还未开始
@@ -190,14 +209,21 @@ export default {
           n.processText = processText
           n.left = left
           n.beforeLeft = beforeLeft
-        })
-        const allDuration = this.$moment(max).diff(this.$moment(min), 'seconds')
-        ls.forEach((n) => {
-          n.durationPercent = parseInt((n.duration / allDuration) * 100) + '%'
-          n.offset =
-            parseInt(
-              (this.$moment(n.start).diff(this.$moment(min), 'seconds') / allDuration) * 100
-            ) + '%'
+        // })
+        // ls.forEach((n) => {
+          const max = maxMap[n.orbitNo].max
+          const min = maxMap[n.orbitNo].min
+          const allDuration = this.$moment(max).diff(this.$moment(min), 'seconds')
+          if (this.$moment(n.end) < this.$moment()) {
+            n.durationPercent = '100%'
+            n.offset = '0%'
+          }else{
+            n.durationPercent = parseInt((n.duration / allDuration) * 100) + '%'
+            n.offset =
+              parseInt(
+                (this.$moment(n.start).diff(this.$moment(min), 'seconds') / allDuration) * 100
+              ) + '%'
+          }
           n.allDuration = allDuration
           n.st = this.$moment(n.start).valueOf()
           n.min = min
@@ -215,8 +241,8 @@ export default {
 
 <style scoped>
 .wrap {
-  background: url('../assets/3.jpeg') no-repeat center center;
-  background-size: 100% 150%;
+  background: url('../assets/4.jpeg') no-repeat center center;
+  background-size: 100% 100%;
 }
 .mask {
   min-height: 100vh;
@@ -266,12 +292,14 @@ export default {
   position: fixed;
   top: 8px;
   right: 20px;
-  font-size: 14px;
-  padding-right: 10px;
   font-size: 40px;
   color: #fff;
   text-shadow: 0 0 2px #000000;
   font-weight: bold;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  z-index: 10;
+  border-radius: 5px;
 }
 .card-body {
   /* background: #f00; */
@@ -289,7 +317,7 @@ export default {
   padding: 10px 4px;
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .row-running {
@@ -305,11 +333,11 @@ export default {
 .row-running .row-description,
 .row-running .row-left {
   font-weight: bold;
-  font-size: 24px;
+  /* font-size: 24px; */
   text-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
 .row-running .row-process {
-  padding-top: 10px;
+  /* padding-top: 10px; */
 }
 
 .row-warning {
@@ -327,7 +355,7 @@ export default {
   text-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
 .row-warning .row-process {
-  padding-top: 4px;
+  /* padding-top: 4px; */
 }
 
 .row-done {
@@ -341,21 +369,21 @@ export default {
 .row-done .row-elevation,
 .row-done .row-description,
 .row-done .row-left {
-  font-size: 12px;
+  /* font-size: 12px; */
   text-shadow: 0 0 2px rgba(0, 0, 0, 1);
 }
 .row-done .row-process {
-  padding-top: 2px;
+  /* padding-top: 2px; */
 }
 
 .row-header {
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .row-name {
-  width: 200px;
+  width: 260px;
 }
 .row-start {
   width: 120px;
@@ -379,27 +407,28 @@ export default {
 .row-description {
   width: 180px;
   padding-left: 10px;
-  font-size:12px;
+  font-size:14px;
+  display: flex;
+  align-items: center;
 }
 .row-process {
   flex: 1;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
   position: relative;
 }
 .row-process-col {
-  padding-top: 4px;
+  padding-top: 7px;
 }
 .row-process-text {
   position: absolute;
-  top: 3px;
+  top: 6px;
   left: 14px;
-  font-size: 12px;
+  font-size: 16px;
   color: #12197e;
   font-weight: bold;
   transform: translateX(8px);
 }
-
 
 .slogen2{
   text-align: center;
@@ -408,4 +437,17 @@ export default {
   color: #fff;
   margin-bottom: 20px;
   }
+
+  .row-orbit-0{
+    background: rgba(138, 138, 138, 0.4);
+  }
+
+  .row-orbit-0:not(.card-body :has(+ .row-orbit-0)){
+    margin-bottom: 20px;
+  }
+
+  .process{
+    font-size: 16px;
+  }
+
 </style>

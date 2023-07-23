@@ -8,7 +8,7 @@
                 <img class="logo" src="@/assets/logo.pic.png" width="100" /> <span>银河航天</span>
               </div>
               <div class="slogen2">Make The Earth Better</div>
-            <div class="slogen2">让地球更美好</div>
+               <div class="slogen2">让地球更美好</div>
             </div>
             <div class="slogen">
               “诺亚”、“四象” 发射成功
@@ -49,7 +49,7 @@ export default {
 .mask {
   height: 100vh;
   width: 100wh;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.7);
 }
 
 .container {
@@ -72,14 +72,15 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 60px;
-  color: #043874;
-  text-shadow: 0 0 5px #ffffff;
+  color: #ffffff;
+  margin-bottom: 10px;
+  /* text-shadow: 0 0 5px #ffffff; */
 }
 .slogen {
   font-size: 80px;
   font-family: 'Microsoft YaHei';
-  color: #043874;
-  text-shadow: 0 0 5px #ffffff;
+  color: #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
   font-weight: bold;
   padding-bottom: 120px;
   text-align: center;
@@ -89,58 +90,18 @@ export default {
   text-align: center;
   font-size: 20px;
   font-family: 'Microsoft YaHei';
-  color: #043874;
-  text-shadow: 0 0 5px #ffffff;
-}
-
-.num {
-  width: 260px;
-  height: 260px;
-  border-radius: 5px;
-  font-family: 'Lucida Console', Monaco, monospace;
-  font-weight: bolder;
-  margin: 10px;
-  box-shadow: 0 0 10px #554ed5;
-  text-shadow: 0 0 5px #ffffff;
-}
-.day {
-  background: rgb(169, 17, 17);
-  color: #09072d;
-}
-.hour {
-  background: rgb(5, 5, 130);
-  color: #fff;
-  text-shadow: 0 0 5px #000000;
-}
-.minute {
-  background: #db9d0d;
-}
-.second {
-  background: rgb(35, 124, 19);
-  color: #fff;
-  text-shadow: 0 0 5px #000000;
-}
-.count {
-  font-size: 150px;
-  text-align: center;
-  vertical-align: middle;
-}
-.unit {
-  font-size: 20px;
-  font-family: 'Microsoft YaHei';
-  vertical-align: middle;
-  text-align: center;
-  transform: translateY(-40px);
+  color: #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
 }
 
 .footer {
   text-align: center;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bolder;
   font-family: 'Lucida Console', Monaco, monospace;
   margin-top: 30px;
-  text-shadow: 0 0 5px #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
   margin-bottom: 60px;
-  color: #043874;
+  color: #ffffff;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-radio-group v-model="current" @change="handleCurrent">
+   页面: <el-radio-group v-model="current" @change="handleCurrent">
       <el-radio :label="1">发射倒计时</el-radio>
       <el-radio :label="2">分离倒计时</el-radio>
       <el-radio :label="3">过站预报</el-radio>
@@ -8,13 +8,16 @@
     </el-radio-group>
     <br />
     <br />
-    <el-date-picker v-model="t0" type="datetime" placeholder="Select date and time"  @change="handleT0"/>
+   发射开始时间: <el-date-picker v-model="t0" type="datetime" placeholder="Select date and time"  @change="handleT0"/>
     <br />
     <br/>
-    <el-input-number v-model="separate" :min="1"  @change="handleChange" />
+    发射开始时间和星箭分离间隔: <el-input-number v-model="separate" :min="1"  @change="handleChange" />
     <br/>
     <br/>
-    <el-input-number v-model="size" :min="1"  @change="handleSizeChange" />
+    过站预报显示个数: <el-input-number v-model="size" :min="1"  @change="handleSizeChange" />
+    <br/>
+    <br/>
+    过站预报距离当前时间多少秒不在显示: <el-input-number v-model="ignore" :min="1"  @change="handleShowDurationChange" />
     <br/>
     <br/>
     <el-input
@@ -35,6 +38,7 @@ export default {
       t0: this.$moment().add(2,'hours'),
       separate: 807 * 1000,
       size:5,
+      ignore: 10 * 60 * 1000,
       forcast: ''
     }
   },
@@ -55,6 +59,7 @@ export default {
       const temp = {
         current: this.current,
         separate:this.separate,
+        ignore:this.ignore,
         size:this.size
       }
       if (this.forcast) {
@@ -77,6 +82,9 @@ export default {
      this.setLocal()
     },
     handleJSON() {
+      this.setLocal()
+    },
+    handleShowDurationChange(){
       this.setLocal()
     }
   }

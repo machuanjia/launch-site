@@ -66,13 +66,13 @@ export default {
 </script>
 <style scoped>
 .wrap {
-  background: url('../assets/1.jpg') no-repeat center bottom;
-  background-size: 100% 150%;
+  background: url('../assets/4.jpeg') no-repeat center bottom;
+  background-size: 100% auto;
 }
 .mask {
   height: 100vh;
   width: 100wh;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .container {
@@ -94,16 +94,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 60px;
-  color: #043874;
-  text-shadow: 0 0 5px #ffffff;
+  font-size: 70px;
+  color: #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
 }
 .slogen {
   padding-left: 20px;
   font-size: 30px;
   font-family: 'Microsoft YaHei';
-  color: #043874;
-  text-shadow: 0 0 5px #ffffff;
+  color: #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
 }
 .count-down {
   display: flex;
@@ -117,25 +117,33 @@ export default {
   font-family: 'Lucida Console', Monaco, monospace;
   font-weight: bolder;
   margin: 10px;
-  box-shadow: 0 0 10px #554ed5;
-  text-shadow: 0 0 5px #ffffff;
+  box-shadow: 0 0 10px #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
 }
 .day {
-  background: rgb(169, 17, 17);
-  color: #09072d;
+  /* background: rgb(0, 0, 0); */
+  /* color: #09072d; */
+  color: #fff;
+  background: rgba(0, 0, 0,0.8); 
 }
 .hour {
-  background: rgb(5, 5, 130);
+  /* background: rgb(5, 5, 130); */
+  /* color: #fff;
+  text-shadow: 0 0 5px #000000; */
   color: #fff;
-  text-shadow: 0 0 5px #000000;
+  background: rgba(0, 0, 0,0.7); 
 }
 .minute {
-  background: #db9d0d;
+  /* background: #db9d0d; */
+  color: #fff;
+  background: rgba(0, 0, 0,0.7); 
 }
 .second {
-  background: rgb(35, 124, 19);
+  /* background: rgb(35, 124, 19); */
+  /* color: #fff;
+  text-shadow: 0 0 5px #000000; */
   color: #fff;
-  text-shadow: 0 0 5px #000000;
+  background: rgba(0, 0, 0,0.7); 
 }
 .count {
   font-size: 150px;
@@ -156,8 +164,8 @@ export default {
   font-weight: bolder;
   font-family: 'Lucida Console', Monaco, monospace;
   margin-top: 30px;
-  text-shadow: 0 0 5px #ffffff;
+  /* text-shadow: 0 0 5px #ffffff; */
   margin-bottom: 60px;
-  color: #043874;
+  color: #ffffff;
 }
 </style>
